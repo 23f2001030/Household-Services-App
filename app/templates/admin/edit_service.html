@@ -1,0 +1,40 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+Edit Service - Admin Panel
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h3 class="mb-4">Edit Service</h3>
+
+    <!-- Service Edit Form -->
+    <form method="POST">
+        <!-- Hidden Service ID Field -->
+        <input type="hidden" name="service_id" value="{{ service.id }}">
+
+        <div class="mb-3">
+            <label for="serviceName" class="form-label">Service Name</label>
+            <input type="text" class="form-control" id="serviceName" name="service_name" value="{{ service.name }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="serviceDescription" class="form-label">Description</label>
+            <textarea class="form-control" id="serviceDescription" name="description" rows="4" required>{{ service.description }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="serviceBasePrice" class="form-label">Base Price</label>
+            <input type="number" class="form-control" id="serviceBasePrice" name="base_price" value="{{ service.base_price }}" required>
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary w-100">Update Service</button>
+        </div>
+
+        <div class="mt-3 text-center">
+            <a href="{{ url_for('admin.admin_dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

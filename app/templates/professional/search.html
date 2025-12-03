@@ -1,0 +1,66 @@
+{% extends "professional/base.html" %}
+
+{% block title %}
+Search - Professional Panel
+{% endblock %}
+
+{% block content %}
+<h2>Search Service Requests</h2>
+
+<!-- Search Form -->
+<form method="POST" action="{{ url_for('professional.professional_search') }}">
+    <div class="form-row">
+        <div class="col-md-3">
+            <label for="search_criteria">Search By</label>
+            <select class="form-control" id="search_criteria" name="search_criteria">
+                <option value="date">Date</option>
+                <option value="address">Customer Address</option>
+                <option value="pin_code">Customer Pin Code</option>
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="search_term">Search Term</label>
+            <input type="text" class="form-control" id="search_term" name="search_term" placeholder="Enter your search term" value="{{ request.form.get('search_term') }}">
+        </div>
+        <div class="col-md-3">
+            <button type="submit" class="btn btn-primary mt-4">Search</button>
+        </div>
+    </div>
+</form>
+
+<hr>
+
+<!-- Search Results Table -->
+{% if search_results %}
+    <h3>Search Results</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Request ID</th>
+                <th>Service</th>
+                <th>Customer Name</th>
+                <th>Customer Address</th>
+                <th>Customer Pin Code</th>
+                <th>Requested Date</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in search_results %}
+                <tr>
+                    <td>{{ request.id }}</td>
+                    <td>{{ request.service.name }}</td>
+                    <td>{{ request.customer.fullname }}</td>
+                    <td>{{ request.customer.address }}</td>
+                    <td>{{ request.customer.pin_code }}</td>
+                    <td>{{ request.created_at }}</td>
+                    <td>{{ request.status }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>No results found for the given search criteria.</p>
+{% endif %}
+
+{% endblock %}

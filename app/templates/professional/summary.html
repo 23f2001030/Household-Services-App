@@ -1,0 +1,115 @@
+{% extends "professional/base.html" %}
+
+{% block title %}
+Professional Summary
+{% endblock %}
+
+
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Professional Summary</h2>
+
+    <!-- Total Service Requests -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5>Total Service Requests</h5>
+                    <h3>{{ total_services }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings and Ratings Charts -->
+    <div class="row mb-4">
+        <!-- Earnings Chart -->
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Earnings Over Time</h4>
+                    <canvas id="earningsChart" style="height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ratings Chart -->
+        <div class="col-md-4">
+            <div class="card" style="height: 300px;">
+                <div class="card-body">
+                    <h4>Ratings Distribution</h4>
+                    <canvas id="ratingsChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Service Requests Per Service Chart -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4>Service Requests Per Service</h4>
+                    <canvas id="serviceChart" style="height: 300px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Earnings Over Time Chart
+    const earningsCtx = document.getElementById('earningsChart').getContext('2d');
+    new Chart(earningsCtx, {
+        type: 'line',
+        data: {
+            labels: {{ earnings_labels | tojson }},
+            datasets: [{
+                label: 'Earnings ($)',
+                data: {{ earnings_values | tojson }},
+                borderColor: '#36a2eb',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                fill: true
+            }]
+        },
+    });
+
+    // Ratings Distribution Chart (Pie)
+    const ratingsCtx = document.getElementById('ratingsChart').getContext('2d');
+    new Chart(ratingsCtx, {
+        type: 'pie',
+        data: {
+            labels: {{ rating_labels | tojson }},
+            datasets: [{
+                data: {{ rating_counts | tojson }},
+                backgroundColor: ['#ff6384', '#36a2eb', '#cc65fe', '#ffce56', '#4bc0c0'],
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true // Ensures proper sizing of the pie chart
+        }
+    });
+
+    // Service Requests Per Service Chart (Bar)
+    const serviceCtx = document.getElementById('serviceChart').getContext('2d');
+    new Chart(serviceCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ service_labels | tojson }},
+            datasets: [{
+                label: 'Number of Requests',
+                data: {{ service_counts | tojson }},
+                backgroundColor: '#36a2eb',
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true // Prevents chart from expanding uncontrollably
+        }
+    });
+</script>
+{% endblock %}

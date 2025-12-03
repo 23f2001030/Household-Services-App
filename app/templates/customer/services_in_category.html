@@ -1,0 +1,29 @@
+{% extends "customer/base.html" %}
+
+{% block title %}
+Search - Customer Panel
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Available Services</h2>
+    <div class="row">
+        {% for service in services %}
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ service.name }}</h5>
+                    <p class="card-text">{{ service.description }}</p>
+                    <p class="text-muted">Price: ${{ service.base_price }}</p>
+                    <form method="POST" action="{{ url_for('customer.book_service', service_id=service.id) }}">
+                        <button type="submit" class="btn btn-primary btn-block">Book Service</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

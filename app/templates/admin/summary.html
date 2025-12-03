@@ -1,0 +1,89 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+Summary - Admin Panel
+{% endblock %}
+
+{% block content %}
+<h2>Admin Summary</h2>
+
+<!-- Charts Row (Side by Side) -->
+<div class="row">
+    <div class="col-md-6">
+        <canvas id="statusChart" style="max-height: 300px;"></canvas>
+    </div>
+    <div class="col-md-6">
+        <canvas id="serviceBreakdownChart" style="max-height: 300px;"></canvas>
+    </div>
+</div>
+
+<hr>
+
+<!-- Statistics Row (Full Width) -->
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Overall Statistics</h5>
+                <p><strong>Total Customers:</strong> {{ total_customers }}</p>
+                <p><strong>Total Professionals:</strong> {{ total_professionals }}</p>
+                <p><strong>Total Services:</strong> {{ total_services }}</p>
+                <p><strong>Total Service Requests:</strong> {{ total_service_requests }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Check if status_data is empty or invalid before rendering the chart
+    const statusData = {{ status_data|tojson }};
+    if (Object.keys(statusData).length > 0) {
+        const statusLabels = Object.keys(statusData);
+        const statusValues = Object.values(statusData);
+
+        // Render Status Chart (Pie chart)
+        const statusCtx = document.getElementById('statusChart').getContext('2d');
+        new Chart(statusCtx, {
+            type: 'pie',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    label: 'Service Requests by Status',
+                    data: statusValues,
+                    backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+                }]
+            }
+        });
+    }
+
+    // Check if service_category_data is empty or invalid before rendering the chart
+    const serviceCategoryData = {{ service_data|tojson }};
+    if (Object.keys(serviceCategoryData).length > 0) {
+        const serviceCategoryLabels = Object.keys(serviceCategoryData);
+        const serviceCategoryValues = Object.values(serviceCategoryData);
+
+        // Render Service Breakdown Chart (Bar chart)
+        const breakdownCtx = document.getElementById('serviceBreakdownChart').getContext('2d');
+        new Chart(breakdownCtx, {
+            type: 'bar',
+            data: {
+                labels: serviceCategoryLabels,
+                datasets: [{
+                    label: 'Requests per Service Category',
+                    data: serviceCategoryValues,
+                    backgroundColor: '#36A2EB',
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+</script>
+
+{% endblock %}

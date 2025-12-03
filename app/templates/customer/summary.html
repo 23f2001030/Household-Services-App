@@ -1,0 +1,118 @@
+{% extends "customer/base.html" %}
+
+{% block title %}
+Summary - Customer Panel
+{% endblock %}
+
+{% block content %}
+<h1>Customer Summary</h1>
+
+<!-- Row for first two charts -->
+<div class="row">
+    <!-- Pie Chart for Service Status -->
+    <div class="col-md-6">
+        <canvas id="statusPieChart"></canvas>
+    </div>
+    
+    <!-- Line Chart for Daily Services -->
+    <div class="col-md-6">
+        <canvas id="dailyLineChart"></canvas>
+    </div>
+</div>
+
+<!-- Row for the new chart -->
+<div class="row mt-4">
+    <!-- Bar Chart for Average Ratings of Professionals -->
+    <div class="col-md-12">
+        <canvas id="averageRatingsBarChart"></canvas>
+    </div>
+</div>
+
+<!-- Text Statistics -->
+<div class="mt-4">
+    <p>Total Services Availed: {{ data.total_services }}</p>
+    <p>Total Expenditure: ₹{{ data.total_expenditure }}</p>
+    <p>Average Rating Given: {{ data.average_rating }}</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Pie Chart for Service Status
+    const statusLabels = {{ status_labels | tojson }};
+    const statusCounts = {{ status_counts | tojson }};
+    const ctxStatus = document.getElementById('statusPieChart').getContext('2d');
+    new Chart(ctxStatus, {
+        type: 'pie',
+        data: {
+            labels: statusLabels,
+            datasets: [{
+                label: 'Service Status Distribution',
+                data: statusCounts,
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+            },
+            maintainAspectRatio: false,
+        }
+    });
+
+    // Line Chart for Daily Services
+    const dailyLabels = {{ data.daily_services.keys() | list | tojson }};
+    const dailyCounts = {{ data.daily_services.values() | list | tojson }};
+    const ctxDaily = document.getElementById('dailyLineChart').getContext('2d');
+    new Chart(ctxDaily, {
+        type: 'line',
+        data: {
+            labels: dailyLabels,
+            datasets: [{
+                label: 'Daily Services',
+                data: dailyCounts,
+                borderColor: '#36A2EB',
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                fill: true,
+                tension: 0.4,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+            },
+            maintainAspectRatio: false,
+        }
+    });
+
+    // Bar Chart for Average Ratings of Professionals
+    const professionalLabels = {{ data.professional_ratings.keys() | list | tojson }};
+    const professionalRatings = {{ data.professional_ratings.values() | list | tojson }};
+    const ctxRatings = document.getElementById('averageRatingsBarChart').getContext('2d');
+    new Chart(ctxRatings, {
+        type: 'bar',
+        data: {
+            labels: professionalLabels,
+            datasets: [{
+                label: 'Average Ratings of Professionals',
+                data: professionalRatings,
+                backgroundColor: '#FF6384',
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+            },
+            maintainAspectRatio: false,
+        }
+    });
+</script>
+{% endblock %}

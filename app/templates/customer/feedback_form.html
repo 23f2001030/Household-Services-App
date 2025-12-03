@@ -1,0 +1,31 @@
+{% extends "customer/base.html" %}
+
+{% block title %}
+Search - Customer Panel
+{% endblock %}
+
+{% block content %}
+
+<h1>Provide Feedback for Service Request #{{ service_request.id }}</h1>
+
+<form method="POST" action="{{ url_for('customer.feedback_form', request_id=service_request.id) }}">
+    <label for="rating">Rating (1 to 5):</label>
+    <select name="rating" id="rating" required>
+        <option value="1">1 - Poor</option>
+        <option value="2">2 - Fair</option>
+        <option value="3">3 - Good</option>
+        <option value="4">4 - Very Good</option>
+        <option value="5">5 - Excellent</option>
+    </select>
+
+    <br><br>
+
+    <label for="review">Review:</label>
+    <textarea name="review" id="review" rows="4" cols="50" placeholder="Write your feedback here..." required></textarea>
+
+    <br><br>
+
+    <button type="submit">Submit Feedback</button>
+</form>
+
+{% endblock %}

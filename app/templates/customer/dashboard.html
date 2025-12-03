@@ -1,0 +1,81 @@
+{% extends "customer/base.html" %}
+
+{% block title %}
+Dashboard - Customer Panel
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="alert alert-info">
+        {% for category, message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %}
+
+    <h1 class="text-center">Welcome, {{ current_user.fullname }}</h1>
+
+    <!-- Service Categories -->
+    <section class="mt-5">
+        <h2>Available Service Categories</h2>
+        <div class="row">
+            {% for category in categories %}
+                <div class="col-md-3 mb-4">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ category.name }}</h5>
+                            <a href="{{ url_for('customer.services_in_category', category_id=category.id) }}" class="btn btn-primary">
+                                View Services
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Service History -->
+    <section class="mt-5">
+        <h2>Service History</h2>
+        {% if service_requests %}
+            <table class="table table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>Service Name</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Professional</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for request in service_requests %}
+                <tr>
+                    <td>{{ request.service.name }}</td>
+                    <td>{{ request.service.category.name }}</td>
+                    <td>{{ request.status }}</td>
+                    <td>{{ request.professional.fullname if request.professional else 'N/A' }}</td>
+                    <td>
+                    {% if request.status == 'accepted' or request.status == 'in_progress' %}
+                        <form action="{{ url_for('customer.close_request', request_id=request.id) }}" method="POST">
+                        <button type="submit" class="btn btn-danger">Close</button>
+                        </form>
+                    {% else %}
+                        N/A
+                    {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>                             
+        {% else %}
+            <p>No service history available.</p>
+        {% endif %}
+    </section>
+</div>
+
+{% endblock %}

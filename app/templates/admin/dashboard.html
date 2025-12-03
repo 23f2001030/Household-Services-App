@@ -1,0 +1,129 @@
+{% extends "admin/base.html" %}
+
+{% block title %}
+Dashboard - Admin Panel
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+
+    <!-- Services Section -->
+    <h2 class="mb-4">Services</h2>
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Service Name</th>
+                <th>Category</th>
+                <th>Base Price</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for service in services %}
+            <tr>
+                <td>{{ service.id }}</td>
+                <td>{{ service.name }}</td>
+                <td>{{ service.category.name if service.category else 'No Category' }}</td>
+                <td>{{ service.base_price }}</td>
+                <td>
+                    <a href="{{ url_for('admin.edit_service', service_id=service.id) }}" class="btn btn-warning btn-sm">Edit</a>
+                    <form method="POST" action="{{ url_for('admin.delete_service', service_id=service.id) }}" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="mb-4">
+        <a href="{{ url_for('admin.create_service') }}" class="btn btn-primary">Add New Service</a>
+    </div>
+
+    <!-- Pending Professionals Section -->
+    <h2 class="mb-4">Professionals</h2>
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Full Name</th>
+                <th>Address</th>
+                <th>Pin Code</th>
+                <th>Service Name</th>
+                <th>Experience</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.fullname }}</td>
+                <td>{{ user.address }}</td>
+                <td>{{ user.pin_code }}</td>
+                <td>{{ user.service_category.name }}</td>
+                <td>{{ user.experience }}</td>
+                <td>{{ user.status }}</td>
+                <td>
+                    {% if user.status != 'approved' %}
+                    <form method="POST" action="{{ url_for('admin.approve_professional', user_id=user.id) }}" style="display:inline;">
+                        <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                    </form>
+                    {% endif %}
+
+                    {% if user.status != 'rejected' %}
+                    <form method="POST" action="{{ url_for('admin.reject_professional', user_id=user.id) }}" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="9" class="text-center">No professional users found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Service Requests Section -->
+    <h2 class="mb-4">Service Requests</h2>
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Assigned Professional</th>
+                <th>Requested Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in service_requests %}
+            <tr>
+                <td>{{ request.id }}</td>
+                <td>{{ request.professional.fullname if request.professional else 'Unassigned' }}</td>
+                <td>{{ request.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ request.status }}</td>
+                <td>
+                    <!-- Form to update the status of the service request -->
+                    <form method="POST" action="{{ url_for('admin.admin_dashboard') }}" style="display:inline;">
+                        <input type="hidden" name="service_request_id" value="{{ request.id }}">
+                        {% if request.status == 'requested' %}
+                            <button type="submit" name="status" value="accepted" class="btn btn-success btn-sm">Accept</button>
+                        {% elif request.status == 'accepted' %}
+                            <button type="submit" name="status" value="closed" class="btn btn-danger btn-sm">Close</button>
+                        {% elif request.status == 'closed' %}
+                            <button type="submit" name="status" value="accepted" class="btn btn-warning btn-sm">Re-Open</button>
+                        {% endif %}
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

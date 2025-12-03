@@ -1,0 +1,114 @@
+{% extends "professional/base.html" %}
+
+{% block title %}
+Dashboard - Professional Panel
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-center">Professional Dashboard</h1>
+
+    <!-- Requested Services Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h3>Requested Services</h3>
+        </div>
+        <div class="card-body">
+            {% if available_requests %}
+                <ul class="list-group">
+                    {% for request in available_requests %}
+                        <li class="list-group-item">
+                            <strong>Service:</strong> {{ request.service.name }} <br>
+                            <strong>Customer:</strong> {{ request.customer.fullname }} <br>
+                            <strong>Requested On:</strong> {{ request.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                            <div class="mt-2">
+                                <form method="POST" action="{{ url_for('professional.accept_request', request_id=request.id) }}" class="d-inline">
+                                    <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                                </form>
+                                <form method="POST" action="{{ url_for('professional.reject_request', request_id=request.id) }}" class="d-inline">
+                                    <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                </form>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No requested services available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Accepted Services Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-success text-white">
+            <h3>Accepted Services</h3>
+        </div>
+        <div class="card-body">
+            {% if accepted_requests %}
+                <ul class="list-group">
+                    {% for request in accepted_requests %}
+                        <li class="list-group-item">
+                            <strong>Service:</strong> {{ request.service.name }} <br>
+                            <strong>Customer:</strong> {{ request.customer.fullname }} <br>
+                            <strong>Accepted On:</strong> 
+                            {% if request.updated_at %}
+                                {{ request.updated_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                            {% else %}
+                                Not yet updated
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No accepted services at the moment.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Rejected Services Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-dark">
+            <h3>Rejected Services</h3>
+        </div>
+        <div class="card-body">
+            {% if rejected_requests %}
+                <ul class="list-group">
+                    {% for request in rejected_requests %}
+                        <li class="list-group-item">
+                            <strong>Service:</strong> {{ request.service.name }} <br>
+                            <strong>Customer:</strong> {{ request.customer.fullname }} <br>
+                            <strong>Rejected On:</strong> {{ request.updated_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No rejected services at the moment.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Closed Services Section -->
+    <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+            <h3>Closed Services</h3>
+        </div>
+        <div class="card-body">
+            {% if closed_services %}
+                <ul class="list-group">
+                    {% for request in closed_services %}
+                        <li class="list-group-item">
+                            <strong>Service:</strong> {{ request.service.name }} <br>
+                            <strong>Customer:</strong> {{ request.customer.fullname }} <br>
+                            <strong>Closed On:</strong> {{ request.updated_at.strftime('%Y-%m-%d %H:%M:%S') }} <br>
+                            <strong>Rating:</strong> {{ request.rating or 'Not Rated Yet' }} <br>
+                            <strong>Review:</strong> {{ request.review or 'No Review Provided' }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No closed services yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
