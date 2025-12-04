@@ -1,9 +1,5 @@
 # Household-Services-App
 
-Project Report 
-
-Student Details 
-
 -   **NAME:** AMAN KUMAR
     
 -   **ROLL NO:** 23F2001030
