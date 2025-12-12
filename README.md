@@ -11,8 +11,6 @@
 [Drive Link to Presentation Video](https://drive.google.com/file/d/1xkOoM-GXsjm6xYwvwn21P0S6HZ4ZL6eJ/view)
 ----------
 
-Project Details
-
 Project Statement
 
 The "A to Z Household Services Application" is a multi-user platform designed to provide a comprehensive home servicing solution. It connects administrators, service professionals, and customers for streamlined management and service execution.
