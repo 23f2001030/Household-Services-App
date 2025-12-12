@@ -8,9 +8,7 @@
     
 
 ----------
-Drive Link to Presentation Video 
-
-[https://drive.google.com/file/d/1xkOoM-GXsjm6xYwvwn21P0S6HZ4ZL6eJ/view?usp=drive_link](https://drive.google.com/file/d/1xkOoM-GXsjm6xYwvwn21P0S6HZ4ZL6eJ/view?usp=drive_link&authuser=1)
+[Drive Link to Presentation Video](https://drive.google.com/file/d/1xkOoM-GXsjm6xYwvwn21P0S6HZ4ZL6eJ/view)
 ----------
 
 Project Details
